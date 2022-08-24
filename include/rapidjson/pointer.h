@@ -95,14 +95,14 @@ public:
     //@{
 
     //! Default constructor.
-    GenericPointer(Allocator* allocator = 0) : allocator_(allocator), ownAllocator_(), nameBuffer_(), tokens_(), tokenCount_(), parseErrorOffset_(), parseErrorCode_(kPointerParseErrorNone) {}
+    GenericPointer(Allocator* allocator = nullptr) : allocator_(allocator), ownAllocator_(), nameBuffer_(), tokens_(), tokenCount_(), parseErrorOffset_(), parseErrorCode_(kPointerParseErrorNone) {}
 
     //! Constructor that parses a string or URI fragment representation.
     /*!
         \param source A null-terminated, string or URI fragment representation of JSON pointer.
         \param allocator User supplied allocator for this pointer. If no allocator is provided, it creates a self-owned one.
     */
-    explicit GenericPointer(const Ch* source, Allocator* allocator = 0) : allocator_(allocator), ownAllocator_(), nameBuffer_(), tokens_(), tokenCount_(), parseErrorOffset_(), parseErrorCode_(kPointerParseErrorNone) {
+    explicit GenericPointer(const Ch* source, Allocator* allocator = nullptr) : allocator_(allocator), ownAllocator_(), nameBuffer_(), tokens_(), tokenCount_(), parseErrorOffset_(), parseErrorCode_(kPointerParseErrorNone) {
         Parse(source, internal::StrLen(source));
     }
 
@@ -125,7 +125,7 @@ public:
         \param allocator User supplied allocator for this pointer. If no allocator is provided, it creates a self-owned one.
         \note Slightly faster than the overload without length.
     */
-    GenericPointer(const Ch* source, size_t length, Allocator* allocator = 0) : allocator_(allocator), ownAllocator_(), nameBuffer_(), tokens_(), tokenCount_(), parseErrorOffset_(), parseErrorCode_(kPointerParseErrorNone) {
+    GenericPointer(const Ch* source, size_t length, Allocator* allocator = nullptr) : allocator_(allocator), ownAllocator_(), nameBuffer_(), tokens_(), tokenCount_(), parseErrorOffset_(), parseErrorCode_(kPointerParseErrorNone) {
         Parse(source, length);
     }
 
@@ -185,7 +185,7 @@ public:
                 CopyFromRaw(rhs); // Normally parsed tokens.
             else {
                 tokens_ = rhs.tokens_; // User supplied const tokens.
-                nameBuffer_ = 0;
+                nameBuffer_ = nullptr;
             }
         }
         return *this;
@@ -449,7 +449,7 @@ public:
         \param alreadyExist If non-null, it stores whether the resolved value is already exist.
         \return The resolved newly created (a JSON Null value), or already exists value.
     */
-    ValueType& Create(ValueType& root, typename ValueType::AllocatorType& allocator, bool* alreadyExist = 0) const {
+    ValueType& Create(ValueType& root, typename ValueType::AllocatorType& allocator, bool* alreadyExist = nullptr) const {
         RAPIDJSON_ASSERT(IsValid());
         ValueType* v = &root;
         bool exist = true;
@@ -505,7 +505,7 @@ public:
         \return The resolved newly created, or already exists value.
     */
     template <typename stackAllocator>
-    ValueType& Create(GenericDocument<EncodingType, typename ValueType::AllocatorType, stackAllocator>& document, bool* alreadyExist = 0) const {
+    ValueType& Create(GenericDocument<EncodingType, typename ValueType::AllocatorType, stackAllocator>& document, bool* alreadyExist = nullptr) const {
         return Create(document, document.GetAllocator(), alreadyExist);
     }
 
@@ -531,7 +531,7 @@ public:
 
         Use unresolvedTokenIndex to retrieve the token index.
     */
-    UriType GetUri(ValueType& root, const UriType& rootUri, size_t* unresolvedTokenIndex = 0, Allocator* allocator = 0) const {
+    UriType GetUri(ValueType& root, const UriType& rootUri, size_t* unresolvedTokenIndex = nullptr, Allocator* allocator = nullptr) const {
         static const Ch kIdString[] = { 'i', 'd', '\0' };
         static const ValueType kIdValue(kIdString, 2);
         UriType base = UriType(rootUri, allocator);
@@ -570,7 +570,7 @@ public:
         return base;
     }
 
-    UriType GetUri(const ValueType& root, const UriType& rootUri, size_t* unresolvedTokenIndex = 0, Allocator* allocator = 0) const {
+    UriType GetUri(const ValueType& root, const UriType& rootUri, size_t* unresolvedTokenIndex = nullptr, Allocator* allocator = nullptr) const {
       return GetUri(const_cast<ValueType&>(root), rootUri, unresolvedTokenIndex, allocator);
     }
 
@@ -592,7 +592,7 @@ public:
 
         Use unresolvedTokenIndex to retrieve the token index.
     */
-    ValueType* Get(ValueType& root, size_t* unresolvedTokenIndex = 0) const {
+    ValueType* Get(ValueType& root, size_t* unresolvedTokenIndex = nullptr) const {
         RAPIDJSON_ASSERT(IsValid());
         ValueType* v = &root;
         for (const Token *t = tokens_; t != tokens_ + tokenCount_; ++t) {
@@ -617,7 +617,7 @@ public:
             // Error: unresolved token
             if (unresolvedTokenIndex)
                 *unresolvedTokenIndex = static_cast<size_t>(t - tokens_);
-            return 0;
+            return nullptr;
         }
         return v;
     }
@@ -627,7 +627,7 @@ public:
         \param root Root value of a DOM sub-tree to be resolved. It can be any value other than document root.
         \return Pointer to the value if it can be resolved. Otherwise null.
     */
-    const ValueType* Get(const ValueType& root, size_t* unresolvedTokenIndex = 0) const { 
+    const ValueType* Get(const ValueType& root, size_t* unresolvedTokenIndex = nullptr) const { 
         return Get(const_cast<ValueType&>(root), unresolvedTokenIndex);
     }
 
@@ -1046,8 +1046,8 @@ private:
 
     error:
         Allocator::Free(tokens_);
-        nameBuffer_ = 0;
-        tokens_ = 0;
+        nameBuffer_ = nullptr;
+        tokens_ = nullptr;
         tokenCount_ = 0;
         parseErrorOffset_ = i;
         return;
@@ -1200,22 +1200,22 @@ typename DocumentType::ValueType& CreateValueByPointer(DocumentType& document, c
 //////////////////////////////////////////////////////////////////////////////
 
 template <typename T>
-typename T::ValueType* GetValueByPointer(T& root, const GenericPointer<typename T::ValueType>& pointer, size_t* unresolvedTokenIndex = 0) {
+typename T::ValueType* GetValueByPointer(T& root, const GenericPointer<typename T::ValueType>& pointer, size_t* unresolvedTokenIndex = nullptr) {
     return pointer.Get(root, unresolvedTokenIndex);
 }
 
 template <typename T>
-const typename T::ValueType* GetValueByPointer(const T& root, const GenericPointer<typename T::ValueType>& pointer, size_t* unresolvedTokenIndex = 0) {
+const typename T::ValueType* GetValueByPointer(const T& root, const GenericPointer<typename T::ValueType>& pointer, size_t* unresolvedTokenIndex = nullptr) {
     return pointer.Get(root, unresolvedTokenIndex);
 }
 
 template <typename T, typename CharType, size_t N>
-typename T::ValueType* GetValueByPointer(T& root, const CharType (&source)[N], size_t* unresolvedTokenIndex = 0) {
+typename T::ValueType* GetValueByPointer(T& root, const CharType (&source)[N], size_t* unresolvedTokenIndex = nullptr) {
     return GenericPointer<typename T::ValueType>(source, N - 1).Get(root, unresolvedTokenIndex);
 }
 
 template <typename T, typename CharType, size_t N>
-const typename T::ValueType* GetValueByPointer(const T& root, const CharType(&source)[N], size_t* unresolvedTokenIndex = 0) {
+const typename T::ValueType* GetValueByPointer(const T& root, const CharType(&source)[N], size_t* unresolvedTokenIndex = nullptr) {
     return GenericPointer<typename T::ValueType>(source, N - 1).Get(root, unresolvedTokenIndex);
 }
 

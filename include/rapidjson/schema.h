@@ -397,7 +397,7 @@ private:
         double d;
     };
 
-    bool WriteType(Type type) { return WriteBuffer(type, 0, 0); }
+    bool WriteType(Type type) { return WriteBuffer(type, nullptr, 0); }
     
     bool WriteNumber(const Number& n) { return WriteBuffer(kNumberType, &n, sizeof(n)); }
     
@@ -1365,7 +1365,7 @@ private:
 
     static const ValueType* GetMember(const ValueType& value, const ValueType& name) {
         typename ValueType::ConstMemberIterator itr = value.FindMember(name);
-        return itr != value.MemberEnd() ? &(itr->value) : 0;
+        return itr != value.MemberEnd() ? &(itr->value) : nullptr;
     }
 
     static void AssignIfExist(bool& out, const ValueType& value, const ValueType& name) {
@@ -1404,11 +1404,11 @@ private:
                 sd->SchemaErrorValue(kSchemaErrorRegexInvalid, p, value.GetString(), value.GetStringLength());
                 r->~RegexType();
                 AllocatorType::Free(r);
-                r = 0;
+                r = nullptr;
             }
             return r;
         }
-        return 0;
+        return nullptr;
     }
 
     static bool IsPatternMatch(const RegexType* pattern, const Ch *str, SizeType) {
@@ -1841,8 +1841,8 @@ public:
         \param pointer An optional JSON pointer to the start of the schema document
         \param spec Optional schema draft or OpenAPI version. Used if no specification in document. Defaults to draft-04.
     */
-    explicit GenericSchemaDocument(const ValueType& document, const Ch* uri = 0, SizeType uriLength = 0,
-        IRemoteSchemaDocumentProviderType* remoteProvider = 0, Allocator* allocator = 0,
+    explicit GenericSchemaDocument(const ValueType& document, const Ch* uri = nullptr, SizeType uriLength = 0,
+        IRemoteSchemaDocumentProviderType* remoteProvider = nullptr, Allocator* allocator = nullptr,
         const PointerType& pointer = PointerType(), // PR #1393
         const Specification& spec = Specification(kDraft04)) :
         remoteProvider_(remoteProvider),
@@ -2166,11 +2166,11 @@ public:
             UriType newid = UriType(CreateSchema(schema, pointer, v, document, id), allocator_);
 
             for (typename ValueType::ConstMemberIterator itr = v.MemberBegin(); itr != v.MemberEnd(); ++itr)
-                CreateSchemaRecursive(0, pointer.Append(itr->name, allocator_), itr->value, document, newid);
+                CreateSchemaRecursive(nullptr, pointer.Append(itr->name, allocator_), itr->value, document, newid);
         }
         else if (v.GetType() == kArrayType)
             for (SizeType i = 0; i < v.Size(); i++)
-                CreateSchemaRecursive(0, pointer.Append(i, allocator_), v[i], document, id);
+                CreateSchemaRecursive(nullptr, pointer.Append(i, allocator_), v[i], document, id);
     }
 
     // Changed by PR #1393
@@ -2324,7 +2324,7 @@ public:
     // TODO cache pointer <-> id mapping
     ValueType* FindId(const ValueType& doc, const UriType& finduri, PointerType& resptr, const UriType& baseuri, bool full, const PointerType& here = PointerType()) const {
         SizeType i = 0;
-        ValueType* resval = 0;
+        ValueType* resval = nullptr;
         UriType tempuri = UriType(finduri, allocator_);
         UriType localuri = UriType(baseuri, allocator_);
         if (doc.GetType() == kObjectType) {
@@ -2382,7 +2382,7 @@ public:
         for (const SchemaEntry* target = schemaMap_.template Bottom<SchemaEntry>(); target != schemaMap_.template End<SchemaEntry>(); ++target)
             if (pointer == target->pointer)
                 return target->schema;
-        return 0;
+        return nullptr;
     }
 
     PointerType GetPointer(const SchemaType* schema) const {
@@ -2457,17 +2457,17 @@ public:
     */
     GenericSchemaValidator(
         const SchemaDocumentType& schemaDocument,
-        StateAllocator* allocator = 0, 
+        StateAllocator* allocator = nullptr, 
         size_t schemaStackCapacity = kDefaultSchemaStackCapacity,
         size_t documentStackCapacity = kDefaultDocumentStackCapacity)
         :
         schemaDocument_(&schemaDocument),
         root_(schemaDocument.GetRoot()),
         stateAllocator_(allocator),
-        ownStateAllocator_(0),
+        ownStateAllocator_(nullptr),
         schemaStack_(allocator, schemaStackCapacity),
         documentStack_(allocator, documentStackCapacity),
-        outputHandler_(0),
+        outputHandler_(nullptr),
         error_(kObjectType),
         currentError_(),
         missingDependents_(),
@@ -2495,7 +2495,7 @@ public:
         schemaDocument_(&schemaDocument),
         root_(schemaDocument.GetRoot()),
         stateAllocator_(allocator),
-        ownStateAllocator_(0),
+        ownStateAllocator_(nullptr),
         schemaStack_(allocator, schemaStackCapacity),
         documentStack_(allocator, documentStackCapacity),
         outputHandler_(&outputHandler),
@@ -2561,7 +2561,7 @@ public:
     const Ch* GetInvalidSchemaKeyword() const {
         if (!schemaStack_.Empty()) return CurrentContext().invalidKeyword;
         if (GetContinueOnErrors() && !error_.ObjectEmpty()) return static_cast<const Ch*>(GetErrorsString());
-        return 0;
+        return nullptr;
     }
 
     //! Gets the error code of invalid schema.
@@ -2594,27 +2594,27 @@ public:
     }
     void AboveMaximum(int64_t actual, const SValue& expected, bool exclusive) {
         AddNumberError(exclusive ? kValidateErrorExclusiveMaximum : kValidateErrorMaximum, ValueType(actual).Move(), expected,
-            exclusive ? &SchemaType::GetExclusiveMaximumString : 0);
+            exclusive ? &SchemaType::GetExclusiveMaximumString : nullptr);
     }
     void AboveMaximum(uint64_t actual, const SValue& expected, bool exclusive) {
         AddNumberError(exclusive ? kValidateErrorExclusiveMaximum : kValidateErrorMaximum, ValueType(actual).Move(), expected,
-            exclusive ? &SchemaType::GetExclusiveMaximumString : 0);
+            exclusive ? &SchemaType::GetExclusiveMaximumString : nullptr);
     }
     void AboveMaximum(double actual, const SValue& expected, bool exclusive) {
         AddNumberError(exclusive ? kValidateErrorExclusiveMaximum : kValidateErrorMaximum, ValueType(actual).Move(), expected,
-            exclusive ? &SchemaType::GetExclusiveMaximumString : 0);
+            exclusive ? &SchemaType::GetExclusiveMaximumString : nullptr);
     }
     void BelowMinimum(int64_t actual, const SValue& expected, bool exclusive) {
         AddNumberError(exclusive ? kValidateErrorExclusiveMinimum : kValidateErrorMinimum, ValueType(actual).Move(), expected,
-            exclusive ? &SchemaType::GetExclusiveMinimumString : 0);
+            exclusive ? &SchemaType::GetExclusiveMinimumString : nullptr);
     }
     void BelowMinimum(uint64_t actual, const SValue& expected, bool exclusive) {
         AddNumberError(exclusive ? kValidateErrorExclusiveMinimum : kValidateErrorMinimum, ValueType(actual).Move(), expected,
-            exclusive ? &SchemaType::GetExclusiveMinimumString : 0);
+            exclusive ? &SchemaType::GetExclusiveMinimumString : nullptr);
     }
     void BelowMinimum(double actual, const SValue& expected, bool exclusive) {
         AddNumberError(exclusive ? kValidateErrorExclusiveMinimum : kValidateErrorMinimum, ValueType(actual).Move(), expected,
-            exclusive ? &SchemaType::GetExclusiveMinimumString : 0);
+            exclusive ? &SchemaType::GetExclusiveMinimumString : nullptr);
     }
 
     void TooLong(const Ch* str, SizeType length, SizeType expected) {
@@ -2952,10 +2952,10 @@ private:
         schemaDocument_(&schemaDocument),
         root_(root),
         stateAllocator_(allocator),
-        ownStateAllocator_(0),
+        ownStateAllocator_(nullptr),
         schemaStack_(allocator, schemaStackCapacity),
         documentStack_(allocator, documentStackCapacity),
-        outputHandler_(0),
+        outputHandler_(nullptr),
         error_(kObjectType),
         currentError_(),
         missingDependents_(),
@@ -3136,7 +3136,7 @@ private:
     }
 
     void AddNumberError(const ValidateErrorCode code, ValueType& actual, const SValue& expected,
-        const typename SchemaType::ValueType& (*exclusive)() = 0) {
+        const typename SchemaType::ValueType& (*exclusive)() = nullptr) {
         currentError_.SetObject();
         currentError_.AddMember(GetActualString(), actual, GetStateAllocator());
         currentError_.AddMember(GetExpectedString(), ValueType(expected, GetStateAllocator()).Move(), GetStateAllocator());
