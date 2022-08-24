@@ -38,19 +38,19 @@ public:
 #endif
 
     //! Constructors
-    GenericUri(Allocator* allocator = 0) : uri_(), base_(), scheme_(), auth_(), path_(), query_(), frag_(), allocator_(allocator), ownAllocator_() {
+    GenericUri(Allocator* allocator = nullptr) : uri_(), base_(), scheme_(), auth_(), path_(), query_(), frag_(), allocator_(allocator), ownAllocator_() {
     }
 
-    GenericUri(const Ch* uri, SizeType len, Allocator* allocator = 0) : uri_(), base_(), scheme_(), auth_(), path_(), query_(), frag_(), allocator_(allocator), ownAllocator_() {
+    GenericUri(const Ch* uri, SizeType len, Allocator* allocator = nullptr) : uri_(), base_(), scheme_(), auth_(), path_(), query_(), frag_(), allocator_(allocator), ownAllocator_() {
         Parse(uri, len);
     }
 
-    GenericUri(const Ch* uri, Allocator* allocator = 0) : uri_(), base_(), scheme_(), auth_(), path_(), query_(), frag_(), allocator_(allocator), ownAllocator_() {
+    GenericUri(const Ch* uri, Allocator* allocator = nullptr) : uri_(), base_(), scheme_(), auth_(), path_(), query_(), frag_(), allocator_(allocator), ownAllocator_() {
         Parse(uri, internal::StrLen<Ch>(uri));
     }
 
     // Use with specializations of GenericValue
-    template<typename T> GenericUri(const T& uri, Allocator* allocator = 0) : uri_(), base_(), scheme_(), auth_(), path_(), query_(), frag_(), allocator_(allocator), ownAllocator_() {
+    template<typename T> GenericUri(const T& uri, Allocator* allocator = nullptr) : uri_(), base_(), scheme_(), auth_(), path_(), query_(), frag_(), allocator_(allocator), ownAllocator_() {
         const Ch* u = uri.template Get<const Ch*>(); // TypeHelper from document.h
         Parse(u, internal::StrLen<Ch>(u));
     }
@@ -101,19 +101,19 @@ public:
     }
 
     const Ch* GetString() const { return uri_; }
-    SizeType GetStringLength() const { return uri_ == 0 ? 0 : internal::StrLen<Ch>(uri_); }
+    SizeType GetStringLength() const { return uri_ == nullptr ? 0 : internal::StrLen<Ch>(uri_); }
     const Ch* GetBaseString() const { return base_; }
-    SizeType GetBaseStringLength() const { return base_ == 0 ? 0 : internal::StrLen<Ch>(base_); }
+    SizeType GetBaseStringLength() const { return base_ == nullptr ? 0 : internal::StrLen<Ch>(base_); }
     const Ch* GetSchemeString() const { return scheme_; }
-    SizeType GetSchemeStringLength() const { return scheme_ == 0 ? 0 : internal::StrLen<Ch>(scheme_); }
+    SizeType GetSchemeStringLength() const { return scheme_ == nullptr ? 0 : internal::StrLen<Ch>(scheme_); }
     const Ch* GetAuthString() const { return auth_; }
-    SizeType GetAuthStringLength() const { return auth_ == 0 ? 0 : internal::StrLen<Ch>(auth_); }
+    SizeType GetAuthStringLength() const { return auth_ == nullptr ? 0 : internal::StrLen<Ch>(auth_); }
     const Ch* GetPathString() const { return path_; }
-    SizeType GetPathStringLength() const { return path_ == 0 ? 0 : internal::StrLen<Ch>(path_); }
+    SizeType GetPathStringLength() const { return path_ == nullptr ? 0 : internal::StrLen<Ch>(path_); }
     const Ch* GetQueryString() const { return query_; }
-    SizeType GetQueryStringLength() const { return query_ == 0 ? 0 : internal::StrLen<Ch>(query_); }
+    SizeType GetQueryStringLength() const { return query_ == nullptr ? 0 : internal::StrLen<Ch>(query_); }
     const Ch* GetFragString() const { return frag_; }
-    SizeType GetFragStringLength() const { return frag_ == 0 ? 0 : internal::StrLen<Ch>(frag_); }
+    SizeType GetFragStringLength() const { return frag_ == nullptr ? 0 : internal::StrLen<Ch>(frag_); }
 
 #if RAPIDJSON_HAS_STDSTRING
     static String Get(const GenericUri& uri) { return String(uri.GetString(), uri.GetStringLength()); }
@@ -145,7 +145,7 @@ public:
             s2 = uri.base_;
         }
         if (s1 == s2) return true;
-        if (s1 == 0 || s2 == 0) return false;
+        if (s1 == nullptr || s2 == nullptr) return false;
         return internal::StrCmp<Ch>(s1, s2) == 0;
     }
 
@@ -267,7 +267,7 @@ private:
     void Free() {
         if (scheme_) {
             Allocator::Free(scheme_);
-            scheme_ = 0;
+            scheme_ = nullptr;
         }
     }
 
