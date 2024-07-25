@@ -115,6 +115,8 @@ public:
     FilterKeyReader(InputStream& is, const Ch* keyString, SizeType keyLength) : 
         is_(is), keyString_(keyString), keyLength_(keyLength), parseResult_()
     {}
+    FilterKeyReader(const FilterKeyReader&) = delete;
+    FilterKeyReader& operator=(const FilterKeyReader&) = delete;
 
     // SAX event flow: reader -> filter -> handler
     template <typename Handler>
@@ -128,9 +130,6 @@ public:
     const ParseResult& GetParseResult() const { return parseResult_; }
 
 private:
-    FilterKeyReader(const FilterKeyReader&) = delete;
-    FilterKeyReader& operator=(const FilterKeyReader&) = delete;
-
     InputStream& is_;
     const char* keyString_;
     const SizeType keyLength_;
