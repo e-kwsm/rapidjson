@@ -146,6 +146,8 @@ public:
         takeFunc_ = f[type_];
         current_ = takeFunc_(*is_);
     }
+    AutoUTFInputStream(const AutoUTFInputStream&) = delete;
+    AutoUTFInputStream& operator=(const AutoUTFInputStream&) = delete;
 
     UTFType GetType() const { return type_; }
     bool HasBOM() const { return hasBOM_; }
@@ -161,9 +163,6 @@ public:
     size_t PutEnd(Ch*) { RAPIDJSON_ASSERT(false); return 0; }
 
 private:
-    AutoUTFInputStream(const AutoUTFInputStream&);
-    AutoUTFInputStream& operator=(const AutoUTFInputStream&);
-
     // Detect encoding type with BOM or RFC 4627
     void DetectType() {
         // BOM (Byte Order Mark):
@@ -251,6 +250,8 @@ public:
         if (putBOM)
             PutBOM();
     }
+    AutoUTFOutputStream(const AutoUTFOutputStream&) = delete;
+    AutoUTFOutputStream& operator=(const AutoUTFOutputStream&) = delete;
 
     UTFType GetType() const { return type_; }
 
@@ -265,9 +266,6 @@ public:
     size_t PutEnd(Ch*) { RAPIDJSON_ASSERT(false); return 0; }
 
 private:
-    AutoUTFOutputStream(const AutoUTFOutputStream&);
-    AutoUTFOutputStream& operator=(const AutoUTFOutputStream&);
-
     void PutBOM() { 
         typedef void (*PutBOMFunc)(OutputByteStream&);
         static const PutBOMFunc f[] = { RAPIDJSON_ENCODINGS_FUNC(PutBOM) };
