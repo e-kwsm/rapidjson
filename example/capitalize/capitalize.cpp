@@ -16,6 +16,8 @@ using namespace rapidjson;
 template<typename OutputHandler>
 struct CapitalizeFilter {
     CapitalizeFilter(OutputHandler& out) : out_(out), buffer_() {}
+    CapitalizeFilter(const CapitalizeFilter&) = delete;
+    CapitalizeFilter& operator=(const CapitalizeFilter&) = delete;
 
     bool Null() { return out_.Null(); }
     bool Bool(bool b) { return out_.Bool(b); }
@@ -39,10 +41,6 @@ struct CapitalizeFilter {
 
     OutputHandler& out_;
     std::vector<char> buffer_;
-
-private:
-    CapitalizeFilter(const CapitalizeFilter&);
-    CapitalizeFilter& operator=(const CapitalizeFilter&);
 };
 
 int main(int, char*[]) {

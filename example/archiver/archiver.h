@@ -103,6 +103,8 @@ class JsonWriter {
 public:
     /// Constructor.
     JsonWriter();
+    JsonWriter(const JsonWriter&) = delete;
+    JsonWriter& operator=(const JsonWriter&) = delete;
 
     /// Destructor.
     ~JsonWriter();
@@ -133,9 +135,6 @@ public:
     static const bool IsWriter = !IsReader;
 
 private:
-    JsonWriter(const JsonWriter&);
-    JsonWriter& operator=(const JsonWriter&);
-
     // PIMPL idiom
     void* mWriter;      ///< JSON writer.
     void* mStream;      ///< Stream buffer.
