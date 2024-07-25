@@ -688,6 +688,9 @@ public:
     //! Default constructor creates a null value.
     GenericValue() RAPIDJSON_NOEXCEPT : data_() { data_.f.flags = kNullFlag; }
 
+    //! Copy constructor is not permitted.
+    GenericValue(const GenericValue& rhs) = delete;
+
 #if RAPIDJSON_HAS_CXX11_RVALUE_REFS
     //! Move constructor in C++11
     GenericValue(GenericValue&& rhs) RAPIDJSON_NOEXCEPT : data_(rhs.data_) {
@@ -696,9 +699,6 @@ public:
 #endif
 
 private:
-    //! Copy constructor is not permitted.
-    GenericValue(const GenericValue& rhs);
-
 #if RAPIDJSON_HAS_CXX11_RVALUE_REFS
     //! Moving from a GenericDocument is not permitted.
     template <typename StackAllocator>
