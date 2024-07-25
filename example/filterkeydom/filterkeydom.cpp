@@ -24,6 +24,9 @@ public:
         outputHandler_(outputHandler), keyString_(keyString), keyLength_(keyLength), filterValueDepth_(), filteredKeyCount_()
     {}
 
+    FilterKeyHandler(const FilterKeyHandler&) = delete;
+    FilterKeyHandler& operator=(const FilterKeyHandler&) = delete;
+
     bool Null()             { return filterValueDepth_ > 0 ? EndValue() : outputHandler_.Null()    && EndValue(); }
     bool Bool(bool b)       { return filterValueDepth_ > 0 ? EndValue() : outputHandler_.Bool(b)   && EndValue(); }
     bool Int(int i)         { return filterValueDepth_ > 0 ? EndValue() : outputHandler_.Int(i)    && EndValue(); }
@@ -90,9 +93,6 @@ public:
     }
 
 private:
-    FilterKeyHandler(const FilterKeyHandler&);
-    FilterKeyHandler& operator=(const FilterKeyHandler&);
-
     bool EndValue() {
         if (filterValueDepth_ == 1) // Just at the end of value after filtered key
             filterValueDepth_ = 0;
@@ -128,8 +128,8 @@ public:
     const ParseResult& GetParseResult() const { return parseResult_; }
 
 private:
-    FilterKeyReader(const FilterKeyReader&);
-    FilterKeyReader& operator=(const FilterKeyReader&);
+    FilterKeyReader(const FilterKeyReader&) = delete;
+    FilterKeyReader& operator=(const FilterKeyReader&) = delete;
 
     InputStream& is_;
     const char* keyString_;
