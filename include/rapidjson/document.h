@@ -2529,6 +2529,11 @@ public:
             ownAllocator_ = allocator_ = RAPIDJSON_NEW(Allocator)();
     }
 
+    //! Prohibit copying
+    GenericDocument(const GenericDocument&) = delete;
+    //! Prohibit assignment
+    GenericDocument& operator=(const GenericDocument&) = delete;
+
 #if RAPIDJSON_HAS_CXX11_RVALUE_REFS
     //! Move constructor in C++11
     GenericDocument(GenericDocument&& rhs) RAPIDJSON_NOEXCEPT
@@ -2803,10 +2808,10 @@ private:
     // clear stack on any exit from ParseStream, e.g. due to exception
     struct ClearStackOnExit {
         explicit ClearStackOnExit(GenericDocument& d) : d_(d) {}
+        ClearStackOnExit(const ClearStackOnExit&) = delete;
+        ClearStackOnExit& operator=(const ClearStackOnExit&) = delete;
         ~ClearStackOnExit() { d_.ClearStack(); }
     private:
-        ClearStackOnExit(const ClearStackOnExit&);
-        ClearStackOnExit& operator=(const ClearStackOnExit&);
         GenericDocument& d_;
     };
 
@@ -2859,11 +2864,6 @@ public:
     }
 
 private:
-    //! Prohibit copying
-    GenericDocument(const GenericDocument&);
-    //! Prohibit assignment
-    GenericDocument& operator=(const GenericDocument&);
-
     void ClearStack() {
         if (Allocator::kNeedFree)
             while (stack_.GetSize() > 0)    // Here assumes all elements in stack array are GenericValue (Member is actually 2 GenericValue objects)
