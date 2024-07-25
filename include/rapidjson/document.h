@@ -2908,6 +2908,7 @@ public:
     template <typename, typename>
     friend class GenericValue;
 
+    GenericArray() = delete;
     GenericArray(const GenericArray& rhs) : value_(rhs.value_) {}
     GenericArray& operator=(const GenericArray& rhs) { value_ = rhs.value_; return *this; }
     ~GenericArray() {}
@@ -2937,7 +2938,6 @@ public:
 #endif
 
 private:
-    GenericArray();
     GenericArray(ValueType& value) : value_(value) {}
     ValueType& value_;
 };
