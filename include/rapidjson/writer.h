@@ -107,6 +107,10 @@ public:
     Writer(StackAllocator* allocator = 0, size_t levelDepth = kDefaultLevelDepth) :
         os_(0), level_stack_(allocator, levelDepth * sizeof(Level)), maxDecimalPlaces_(kDefaultMaxDecimalPlaces), hasRoot_(false) {}
 
+    // Prohibit copy constructor & assignment operator.
+    Writer(const Writer&) = delete;
+    Writer& operator=(const Writer&) = delete;
+
 #if RAPIDJSON_HAS_CXX11_RVALUE_REFS
     Writer(Writer&& rhs) :
         os_(rhs.os_), level_stack_(std::move(rhs.level_stack_)), maxDecimalPlaces_(rhs.maxDecimalPlaces_), hasRoot_(rhs.hasRoot_) {
@@ -507,11 +511,6 @@ protected:
     internal::Stack<StackAllocator> level_stack_;
     int maxDecimalPlaces_;
     bool hasRoot_;
-
-private:
-    // Prohibit copy constructor & assignment operator.
-    Writer(const Writer&);
-    Writer& operator=(const Writer&);
 };
 
 // Full specialization for StringStream to prevent memory copying
