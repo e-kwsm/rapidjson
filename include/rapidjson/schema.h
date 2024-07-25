@@ -1892,6 +1892,11 @@ public:
         schemaRef_.ShrinkToFit(); // Deallocate all memory for ref
     }
 
+    //! Prohibit copying
+    GenericSchemaDocument(const GenericSchemaDocument&) = delete;
+    //! Prohibit assignment
+    GenericSchemaDocument& operator=(const GenericSchemaDocument&) = delete;
+
 #if RAPIDJSON_HAS_CXX11_RVALUE_REFS
     //! Move constructor in C++11
     GenericSchemaDocument(GenericSchemaDocument&& rhs) RAPIDJSON_NOEXCEPT :
@@ -2000,11 +2005,6 @@ public:
     }
 
   private:
-    //! Prohibit copying
-    GenericSchemaDocument(const GenericSchemaDocument&);
-    //! Prohibit assignment
-    GenericSchemaDocument& operator=(const GenericSchemaDocument&);
-
     typedef const PointerType* SchemaRefPtr; // PR #1393
 
     struct SchemaEntry {
