@@ -409,6 +409,9 @@ struct GenericStringRef {
     GenericStringRef(const CharType* str, SizeType len)
         : s(RAPIDJSON_LIKELY(str) ? str : emptyString), length(len) { RAPIDJSON_ASSERT(str != 0 || len == 0u); }
 
+    //! Copy assignment operator not permitted - immutable type
+    GenericStringRef& operator=(const GenericStringRef& rhs) = delete;
+
     GenericStringRef(const GenericStringRef& rhs) : s(rhs.s), length(rhs.length) {}
 
     //! implicit conversion to plain CharType pointer
@@ -429,8 +432,6 @@ private:
     //! Disallow construction from non-const array
     template<SizeType N>
     GenericStringRef(CharType (&str)[N]) /* = delete */;
-    //! Copy assignment operator not permitted - immutable type
-    GenericStringRef& operator=(const GenericStringRef& rhs) /* = delete */;
 };
 
 template<typename CharType>
