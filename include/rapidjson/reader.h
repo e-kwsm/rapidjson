@@ -544,6 +544,10 @@ public:
     GenericReader(StackAllocator* stackAllocator = 0, size_t stackCapacity = kDefaultStackCapacity) :
         stack_(stackAllocator, stackCapacity), parseResult_(), state_(IterativeParsingStartState) {}
 
+    // Prohibit copy constructor & assignment operator.
+    GenericReader(const GenericReader&) = delete;
+    GenericReader& operator=(const GenericReader&) = delete;
+
     //! Parse JSON text.
     /*! \tparam parseFlags Combination of \ref ParseFlag.
         \tparam InputStream Type of input stream, implementing Stream concept.
@@ -688,20 +692,16 @@ protected:
     void SetParseError(ParseErrorCode code, size_t offset) { parseResult_.Set(code, offset); }
 
 private:
-    // Prohibit copy constructor & assignment operator.
-    GenericReader(const GenericReader&);
-    GenericReader& operator=(const GenericReader&);
-
     void ClearStack() { stack_.Clear(); }
 
     // clear stack on any exit from ParseStream, e.g. due to exception
     struct ClearStackOnExit {
         explicit ClearStackOnExit(GenericReader& r) : r_(r) {}
         ~ClearStackOnExit() { r_.ClearStack(); }
+        ClearStackOnExit(const ClearStackOnExit&) = delete;
+        ClearStackOnExit& operator=(const ClearStackOnExit&) = delete;
     private:
         GenericReader& r_;
-        ClearStackOnExit(const ClearStackOnExit&);
-        ClearStackOnExit& operator=(const ClearStackOnExit&);
     };
 
     template<unsigned parseFlags, typename InputStream>
