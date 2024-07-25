@@ -36,6 +36,9 @@ public:
     FileWriteStream(std::FILE* fp, char* buffer, size_t bufferSize) : fp_(fp), buffer_(buffer), bufferEnd_(buffer + bufferSize), current_(buffer_) { 
         RAPIDJSON_ASSERT(fp_ != 0);
     }
+    // Prohibit copy constructor & assignment operator.
+    FileWriteStream(const FileWriteStream&) = delete;
+    FileWriteStream& operator=(const FileWriteStream&) = delete;
 
     void Put(char c) { 
         if (current_ >= bufferEnd_)
@@ -79,10 +82,6 @@ public:
     size_t PutEnd(char*) { RAPIDJSON_ASSERT(false); return 0; }
 
 private:
-    // Prohibit copy constructor & assignment operator.
-    FileWriteStream(const FileWriteStream&);
-    FileWriteStream& operator=(const FileWriteStream&);
-
     std::FILE* fp_;
     char *buffer_;
     char *bufferEnd_;

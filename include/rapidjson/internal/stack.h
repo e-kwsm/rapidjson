@@ -63,6 +63,10 @@ public:
         Destroy();
     }
 
+    // Prohibit copy constructor & assignment operator.
+    Stack(const Stack&) = delete;
+    Stack& operator=(const Stack&) = delete;
+
 #if RAPIDJSON_HAS_CXX11_RVALUE_REFS
     Stack& operator=(Stack&& rhs) {
         if (&rhs != this)
@@ -209,10 +213,6 @@ private:
         Allocator::Free(stack_);
         RAPIDJSON_DELETE(ownAllocator_); // Only delete if it is owned by the stack
     }
-
-    // Prohibit copy constructor & assignment operator.
-    Stack(const Stack&);
-    Stack& operator=(const Stack&);
 
     Allocator* allocator_;
     Allocator* ownAllocator_;
