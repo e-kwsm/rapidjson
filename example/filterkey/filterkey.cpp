@@ -22,6 +22,8 @@ public:
     FilterKeyHandler(OutputHandler& outputHandler, const Ch* keyString, SizeType keyLength) : 
         outputHandler_(outputHandler), keyString_(keyString), keyLength_(keyLength), filterValueDepth_(), filteredKeyCount_()
     {}
+    FilterKeyHandler(const FilterKeyHandler&) = delete;
+    FilterKeyHandler& operator=(const FilterKeyHandler&) = delete;
 
     bool Null()             { return filterValueDepth_ > 0 ? EndValue() : outputHandler_.Null()    && EndValue(); }
     bool Bool(bool b)       { return filterValueDepth_ > 0 ? EndValue() : outputHandler_.Bool(b)   && EndValue(); }
@@ -89,9 +91,6 @@ public:
     }
 
 private:
-    FilterKeyHandler(const FilterKeyHandler&);
-    FilterKeyHandler& operator=(const FilterKeyHandler&);
-
     bool EndValue() {
         if (filterValueDepth_ == 1) // Just at the end of value after filtered key
             filterValueDepth_ = 0;

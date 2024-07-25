@@ -73,6 +73,9 @@ public:
         if (static_cast<unsigned char>(is_.Peek()) == 0xBBu) is_.Take();
         if (static_cast<unsigned char>(is_.Peek()) == 0xBFu) is_.Take();
     }
+    EncodedInputStream(const EncodedInputStream&) = delete;
+    EncodedInputStream& operator=(const EncodedInputStream&) = delete;
+
     Ch Peek() const { return is_.Peek(); }
     Ch Take() { return is_.Take(); }
     size_t Tell() const { return is_.Tell(); }
@@ -84,10 +87,6 @@ public:
     size_t PutEnd(Ch*) { return 0; }
 
     MemoryStream& is_;
-
-private:
-    EncodedInputStream(const EncodedInputStream&);
-    EncodedInputStream& operator=(const EncodedInputStream&);
 };
 
 //! Output byte stream wrapper with statically bound encoding.
@@ -105,6 +104,8 @@ public:
         if (putBOM)
             Encoding::PutBOM(os_);
     }
+    EncodedOutputStream(const EncodedOutputStream&) = delete;
+    EncodedOutputStream& operator=(const EncodedOutputStream&) = delete;
 
     void Put(Ch c) { Encoding::Put(os_, c);  }
     void Flush() { os_.Flush(); }
@@ -117,9 +118,6 @@ public:
     size_t PutEnd(Ch*) { RAPIDJSON_ASSERT(false); return 0; }
 
 private:
-    EncodedOutputStream(const EncodedOutputStream&);
-    EncodedOutputStream& operator=(const EncodedOutputStream&);
-
     OutputByteStream& os_;
 };
 
