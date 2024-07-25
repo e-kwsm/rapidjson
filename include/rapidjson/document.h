@@ -2964,6 +2964,7 @@ public:
     template <typename, typename>
     friend class GenericValue;
 
+    GenericObject() = delete;
     GenericObject(const GenericObject& rhs) : value_(rhs.value_) {}
     GenericObject& operator=(const GenericObject& rhs) { value_ = rhs.value_; return *this; }
     ~GenericObject() {}
@@ -3026,7 +3027,6 @@ public:
 #endif
 
 private:
-    GenericObject();
     GenericObject(ValueType& value) : value_(value) {}
     ValueType& value_;
 };

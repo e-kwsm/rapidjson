@@ -44,6 +44,8 @@ public:
     EncodedInputStream(InputByteStream& is) : is_(is) { 
         current_ = Encoding::TakeBOM(is_);
     }
+    EncodedInputStream(const EncodedInputStream&) = delete;
+    EncodedInputStream& operator=(const EncodedInputStream&) = delete;
 
     Ch Peek() const { return current_; }
     Ch Take() { Ch c = current_; current_ = Encoding::Take(is_); return c; }
@@ -56,9 +58,6 @@ public:
     size_t PutEnd(Ch*) { RAPIDJSON_ASSERT(false); return 0; }
 
 private:
-    EncodedInputStream(const EncodedInputStream&);
-    EncodedInputStream& operator=(const EncodedInputStream&);
-
     InputByteStream& is_;
     Ch current_;
 };
