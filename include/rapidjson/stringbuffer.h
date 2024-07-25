@@ -44,6 +44,10 @@ public:
 
     GenericStringBuffer(Allocator* allocator = 0, size_t capacity = kDefaultCapacity) : stack_(allocator, capacity) {}
 
+    // Prohibit copy constructor & assignment operator.
+    GenericStringBuffer(const GenericStringBuffer&) = delete;
+    GenericStringBuffer& operator=(const GenericStringBuffer&) = delete;
+
 #if RAPIDJSON_HAS_CXX11_RVALUE_REFS
     GenericStringBuffer(GenericStringBuffer&& rhs) : stack_(std::move(rhs.stack_)) {}
     GenericStringBuffer& operator=(GenericStringBuffer&& rhs) {
@@ -86,11 +90,6 @@ public:
 
     static const size_t kDefaultCapacity = 256;
     mutable internal::Stack<Allocator> stack_;
-
-private:
-    // Prohibit copy constructor & assignment operator.
-    GenericStringBuffer(const GenericStringBuffer&);
-    GenericStringBuffer& operator=(const GenericStringBuffer&);
 };
 
 //! String buffer with UTF8 encoding

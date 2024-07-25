@@ -245,11 +245,9 @@ template<typename Stream>
 class StreamLocalCopy<Stream, 0> {
 public:
     StreamLocalCopy(Stream& original) : s(original) {}
+    StreamLocalCopy& operator=(const StreamLocalCopy&) = delete;
 
     Stream& s;
-
-private:
-    StreamLocalCopy& operator=(const StreamLocalCopy&) /* = delete */;
 };
 
 } // namespace internal
