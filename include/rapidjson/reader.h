@@ -927,6 +927,9 @@ private:
         typedef CharType Ch;
 
         StackStream(internal::Stack<StackAllocator>& stack) : stack_(stack), length_(0) {}
+        StackStream(const StackStream&) = delete;
+        StackStream& operator=(const StackStream&) = delete;
+
         RAPIDJSON_FORCEINLINE void Put(Ch c) {
             *stack_.template Push<Ch>() = c;
             ++length_;
@@ -944,9 +947,6 @@ private:
         }
 
     private:
-        StackStream(const StackStream&);
-        StackStream& operator=(const StackStream&);
-
         internal::Stack<StackAllocator>& stack_;
         SizeType length_;
     };
