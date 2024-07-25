@@ -61,6 +61,8 @@ public:
         \note in-situ means the source JSON string will be modified after parsing.
     */
     JsonReader(const char* json);
+    JsonReader(const JsonReader&) = delete;
+    JsonReader& operator=(const JsonReader&) = delete;
 
     /// Destructor.
     ~JsonReader();
@@ -89,9 +91,6 @@ public:
     static const bool IsWriter = !IsReader;
 
 private:
-    JsonReader(const JsonReader&);
-    JsonReader& operator=(const JsonReader&);
-
     void Next();
 
     // PIMPL
