@@ -135,6 +135,8 @@ public:
         return *this = static_cast<GenericMember&>(rhs);
     }
 #endif
+    //! Copy constructor is not permitted.
+    GenericMember(const GenericMember& rhs) = delete;
 
     //! Assignment with move semantics.
     /*! \param rhs Source of the assignment. Its name and value will become a null value after assignment.
@@ -152,10 +154,6 @@ public:
         a.name.Swap(b.name);
         a.value.Swap(b.value);
     }
-
-private:
-    //! Copy constructor is not permitted.
-    GenericMember(const GenericMember& rhs);
 };
 
 ///////////////////////////////////////////////////////////////////////////////

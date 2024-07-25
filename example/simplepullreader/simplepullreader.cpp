@@ -17,6 +17,8 @@ struct MyHandler {
     std::string data;
     
     MyHandler() : type(), data() {}
+    MyHandler(const MyHandler& noCopyConstruction) = delete;
+    MyHandler& operator=(const MyHandler& noAssignment) = delete;
 
     bool Null() { type = "Null"; data.clear(); return true; }
     bool Bool(bool b) { type = "Bool:"; data = b? "true": "false"; return true; }
@@ -32,9 +34,6 @@ struct MyHandler {
     bool EndObject(SizeType memberCount) { type = "EndObject:"; data = stringify(memberCount); return true; }
     bool StartArray() { type = "StartArray"; data.clear(); return true; }
     bool EndArray(SizeType elementCount) { type = "EndArray:"; data = stringify(elementCount); return true; }
-private:
-    MyHandler(const MyHandler& noCopyConstruction);
-    MyHandler& operator=(const MyHandler& noAssignment);
 };
 
 int main() {
