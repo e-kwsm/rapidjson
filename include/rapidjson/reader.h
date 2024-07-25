@@ -232,12 +232,11 @@ class StreamLocalCopy<Stream, 1> {
 public:
     StreamLocalCopy(Stream& original) : s(original), original_(original) {}
     ~StreamLocalCopy() { original_ = s; }
+    StreamLocalCopy& operator=(const StreamLocalCopy&) = delete;
 
     Stream s;
 
 private:
-    StreamLocalCopy& operator=(const StreamLocalCopy&) /* = delete */;
-
     Stream& original_;
 };
 

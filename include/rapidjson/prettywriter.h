@@ -62,6 +62,10 @@ public:
     explicit PrettyWriter(StackAllocator* allocator = 0, size_t levelDepth = Base::kDefaultLevelDepth) : 
         Base(allocator, levelDepth), indentChar_(' '), indentCharCount_(4), formatOptions_(kFormatDefault) {}
 
+    // Prohibit copy constructor & assignment operator.
+    PrettyWriter(const PrettyWriter&) = delete;
+    PrettyWriter& operator=(const PrettyWriter&) = delete;
+
 #if RAPIDJSON_HAS_CXX11_RVALUE_REFS
     PrettyWriter(PrettyWriter&& rhs) :
         Base(std::forward<PrettyWriter>(rhs)), indentChar_(rhs.indentChar_), indentCharCount_(rhs.indentCharCount_), formatOptions_(rhs.formatOptions_) {}
@@ -257,11 +261,6 @@ protected:
     Ch indentChar_;
     unsigned indentCharCount_;
     PrettyFormatOptions formatOptions_;
-
-private:
-    // Prohibit copy constructor & assignment operator.
-    PrettyWriter(const PrettyWriter&);
-    PrettyWriter& operator=(const PrettyWriter&);
 };
 
 RAPIDJSON_NAMESPACE_END
